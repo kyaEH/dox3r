@@ -1,5 +1,6 @@
 #!/usr/bin/python3
 # -*- coding: utf-8 -*-
+
 import requests
 import time
 import os
@@ -8,14 +9,14 @@ from time import sleep
 import warnings
 from urllib3.exceptions import  InsecureRequestWarning
 warnings.simplefilter('ignore',InsecureRequestWarning)
-
-os.system('clear')
-
+if os.name == 'nt':
+    os.system('cls')
+else:
+    os.system('clear')
 class bcolors:
     Redd         = "\033[31m"
     Greenn        = "\033[32m"
     White        = "\033[97m"
-
 ''' RECHERCHE PAR PSEUDONYME '''
 username = input('\033[92m[✓] Entrer le pseudonyme : ')
 
@@ -91,22 +92,17 @@ wordpress, pinterest, github, steam, imgur, spotify,
 badoo, dailymotion, keybase, pastebin, roblox, 
 tripadvisor, wikipedia, hackernews, ebay,
 ]
-
-
 ''' FONCTION COULEUR '''
 def outer_func(colour):
     def inner_function(msg):
         print(f'{colour}{msg}')
     return inner_function
-
-
 ''' COULEUR PRINT '''
 GREEN = outer_func('\033[92m')
 YELLOW = outer_func('\033[93m')
 RED = outer_func('\033[31m')
 PURPLE =    outer_func('\033[95m')
 DarkGray = outer_func('\033[90m')
-
 ''' BANNER '''
 def banner():
     print(bcolors.Redd + 
@@ -121,8 +117,7 @@ def banner():
  ░ ▒  ▒   ░ ▒ ▒░ ░░   ░▒ ░ ░ ░  ░  ░▒ ░ ▒░
  ░ ░  ░ ░ ░ ░ ▒   ░    ░     ░     ░░   ░ 
    ░        ░ ░   ░    ░     ░  ░   ░     
- ░                                        
-                                                                        
+ ░\n                                        
         \033[33m DOX3R outil de recherche avancée \033[33m  
         \033[33m Developpeur : \032 https://github.com/haisenberg 
         """)
@@ -131,29 +126,31 @@ def search():
     RED(f'[✓] Votre analyse à bien était envoyée sur :{username}')
     time.sleep(0.5)
     print('[✓] Analyse en cours veuillez patienter...')
-    time.sleep(0.5)
-
-    time.sleep(3)
-
+    time.sleep(4)
     count = 0
     match = True 
     for url in WEBSITES:
-        r = requests.get(url)
-
-        if r.status_code == 200:
-            if match == True:
-                GREEN('[✓] Information trouvée !')
-                match = False
-            PURPLE(f'\n{url} - {r.status_code} - [✓]')
-            if username in r.text:
-                GREEN(f'[DOX3R] TROUVER: Username:{username} - utilisateur trouver dans ce site web ')
-            else:
-                GREEN(f'[DOX3R] INTROUVABLE: Username:{username} - \033[91m Utilisateur introuvable')
-
+        try:
+            r = requests.get(url)
+            if r.status_code == 200:
+                if match == True:
+                    GREEN('[✓] Information trouvée !')
+                    match = False
+                PURPLE(f'\n{url} - {r.status_code} - [✓]')
+                if username in r.text:
+                    GREEN(f'[DOX3R] TROUVER: Username:{username} - \033[43m\033[30m Utilisateur trouvé dans ce site web \033[0m')
+                else:
+                    GREEN(f'[DOX3R] INTROUVABLE: Username:{username} - \033[91m Utilisateur introuvable')
+        except requests.exceptions.SSLError:
+            print("Error SSL")
+        except:
+            pass
     print(bcolors.Redd + 'Fin de la recherche de DOX3R...')
-
-
-
 if __name__=='__main__':
-    banner()
-    search()
+    try:
+        banner()
+        search()
+    except:
+        print("\033[0mErreur, fin de la recherche. \n\n\n\nErreur:")
+        raise
+
